@@ -44,7 +44,7 @@ fitness-tracker/
 
 ## ▶️ How to Run
 
-1. Clone repo: git clone https://github.com/YOUR_USERNAME/fitness-tracker.git
+1. Clone repo: git clone https://github.com/govindmishra2006/fitness-tracker.git
 2. Open folder and run:
 - Open `index.html` in browser  
 
