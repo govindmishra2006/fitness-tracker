@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitLog — Advanced Fitness Tracker</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="nav-brand">
+      <span class="nav-logo">◑</span>
+      <span class="nav-name">FitLog</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="workouts">Workouts</button>
+      <button class="tab-btn" data-tab="stats">Statistics</button>
+    </div>
+    <button class="add-workout-btn" id="open-add-modal">+ Log Workout</button>
+  </nav>
+
+  <!-- DASHBOARD TAB -->
+  <div class="tab-content active" id="tab-dashboard">
+    <div class="dash-grid">
+
+      <!-- KPI CARDS -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-icon">🔥</span>
+          <div>
+            <p class="kpi-label">Total Calories</p>
+            <p class="kpi-val" id="kpi-cals">0</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-icon">🏋️</span>
+          <div>
+            <p class="kpi-label">Total Workouts</p>
+            <p class="kpi-val" id="kpi-total">0</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-icon">📅</span>
+          <div>
+            <p class="kpi-label">This Week</p>
+            <p class="kpi-val" id="kpi-week">0</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-icon">⚡</span>
+          <div>
+            <p class="kpi-label">Avg Cal/Workout</p>
+            <p class="kpi-val" id="kpi-avg">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT + WEEKLY CHART -->
+      <div class="dash-panels">
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Recent Workouts</h3>
+            <span class="panel-sub" id="recent-date-range"></span>
+          </div>
+          <div class="recent-list" id="recent-list">
+            <div class="no-data-msg">No workouts yet. Log your first one!</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Weekly Calories</h3>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="weekly-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORY BREAKDOWN -->
+      <div class="panel full-width">
+        <div class="panel-header">
+          <h3 class="panel-title">Category Breakdown</h3>
+        </div>
+        <div class="category-grid" id="category-grid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WORKOUTS TAB -->
+  <div class="tab-content" id="tab-workouts">
+    <div class="workout-controls">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="workout-search" class="search-input" placeholder="Search workouts…"/>
+      </div>
+      <div class="filter-group">
+        <select id="filter-category" class="filter-select">
+          <option value="">All Categories</option>
+          <option value="Cardio">Cardio</option>
+          <option value="Strength">Strength</option>
+          <option value="HIIT">HIIT</option>
+          <option value="Yoga">Yoga</option>
+          <option value="Cycling">Cycling</option>
+          <option value="Swimming">Swimming</option>
+          <option value="Running">Running</option>
+          <option value="Sports">Sports</option>
+          <option value="Other">Other</option>
+        </select>
+        <input type="date" id="filter-date-from" class="filter-select" title="From date"/>
+        <input type="date" id="filter-date-to"   class="filter-select" title="To date"/>
+        <button class="reset-btn" id="reset-filters">Reset</button>
+      </div>
+    </div>
+
+    <div class="workout-table-wrap">
+      <table class="workout-table" id="workout-table">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="name">Name <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="category">Category <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="calories">Calories <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="duration">Duration <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="date">Date <span class="sort-arrow">↕</span></th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="workout-tbody">
+          <!-- Injected by JS -->
+        </tbody>
+      </table>
+      <div class="empty-table" id="empty-table" style="display:none">
+        <p>No workouts match your filters.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS TAB -->
+  <div class="tab-content" id="tab-stats">
+    <div class="stats-layout">
+      <div class="panel">
+        <div class="panel-header"><h3 class="panel-title">Calories by Category</h3></div>
+        <div class="chart-wrap tall"><canvas id="cat-cal-chart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h3 class="panel-title">Workouts by Category</h3></div>
+        <div class="chart-wrap tall"><canvas id="cat-count-chart"></canvas></div>
+      </div>
+      <div class="panel full-width">
+        <div class="panel-header"><h3 class="panel-title">30-Day Calorie Trend</h3></div>
+        <div class="chart-wrap"><canvas id="trend-chart"></canvas></div>
+      </div>
+      <div class="panel full-width">
+        <div class="panel-header"><h3 class="panel-title">Personal Records</h3></div>
+        <div class="pr-grid" id="pr-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Log Workout</h3>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Workout Name *</label>
+            <input type="text" id="f-name" class="form-input" placeholder="e.g. Morning Run" maxlength="80"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select id="f-category" class="form-input">
+              <option value="">Select…</option>
+              <option>Cardio</option>
+              <option>Strength</option>
+              <option>HIIT</option>
+              <option>Yoga</option>
+              <option>Cycling</option>
+              <option>Swimming</option>
+              <option>Running</option>
+              <option>Sports</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Calories Burned *</label>
+            <input type="number" id="f-calories" class="form-input" placeholder="e.g. 350" min="1" max="9999"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration (minutes)</label>
+            <input type="number" id="f-duration" class="form-input" placeholder="e.g. 45" min="1" max="999"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date *</label>
+            <input type="date" id="f-date" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intensity</label>
+            <select id="f-intensity" class="form-input">
+              <option value="moderate">Moderate</option>
+              <option value="low">Low</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea id="f-notes" class="form-input form-textarea" placeholder="Optional notes about this workout…" rows="3" maxlength="400"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="modal-cancel">Cancel</button>
+        <button class="btn-save" id="modal-save">Save Workout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM DELETE -->
+  <div class="modal-overlay" id="confirm-overlay">
+    <div class="modal confirm-modal">
+      <div class="modal-header">
+        <h3>Delete Workout?</h3>
+        <button class="modal-close" id="confirm-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="confirm-no">Cancel</button>
+        <button class="btn-delete" id="confirm-yes">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="charts.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
