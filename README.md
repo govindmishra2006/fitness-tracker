@@ -5,7 +5,7 @@ A responsive web application to track workouts, calories, and fitness progress w
 ---
 
 ## 🌐 Live Demo
-👉 https://YOUR_USERNAME.github.io/fitness-tracker/
+👉 https://govindmishra2006.github.io/fitness-tracker/
 
 ---
 
